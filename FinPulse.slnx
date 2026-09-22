@@ -1,0 +1,8 @@
+<Solution>
+  <Project Path="FinPulse.Application/FinPulse.Application.csproj" Id="ccec5368-dd75-4f41-9938-3005f2da675d" />
+  <Project Path="FinPulse.Domain/FinPulse.Domain.csproj" Id="327a44a0-56d3-48d0-8602-3b55401570d1" />
+  <Project Path="FinPulse.Infrastructure/FinPulse.Infrastructure.csproj" Id="27cc9d20-e123-4e14-a76a-a5ece709b213" />
+  <Project Path="FinPulse.MVC/FinPulse.MVC.csproj" Id="a1cf05f3-9de7-4cad-bf85-6b6c9ade937b" />
+  <Project Path="FinPulse.Tests/FinPulse.Tests.csproj" Id="0ddc9dbd-d9d9-4983-b871-794397f5c512" />
+  <Project Path="FinPulse/FinPulse.csproj" />
+</Solution>
