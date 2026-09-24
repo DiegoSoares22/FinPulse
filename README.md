@@ -1,82 +1,65 @@
-# FinPulse API
+# FinPulse
 
-API REST de gestão financeira pessoal construída com C# e ASP.NET Core 8, com autenticação via ASP.NET Core Identity + JWT, versionamento de API e proteção contra abuso por rate limiting.
+Secure financial management REST API built with C# and ASP.NET Core 8.
 
-> Projeto pessoal de estudo, desenvolvido para aplicar na prática padrões de arquitetura e segurança usados em APIs de produção.
+`C#` `ASP.NET Core 8` `Entity Framework Core` `SQL Server` `JWT` `xUnit`
 
-## Stack
+## Highlights
 
-| Camada | Tecnologias |
-|---|---|
-| Backend | C#, ASP.NET Core 8, Entity Framework Core, SQL Server |
-| Autenticação | ASP.NET Core Identity, JWT Bearer, Refresh Tokens |
-| Documentação | Swagger / OpenAPI (v1 e v2) |
-| Testes | xUnit |
-| Frontend | React + TypeScript (`finpulse-web`), MVC (`FinPulse.MVC`) |
+- **Authentication** - ASP.NET Core Identity with JWT and refresh tokens, with ClockSkew set to zero so tokens expire exactly when configured.
+- **Abuse protection** - two-level rate limiting: a global per-IP limit and a stricter policy on the login endpoint.
+- **API versioning** - by URL segment and query string, with a separate Swagger document per version.
+- **Data access** - Repository + Unit of Work, with interfaces declared in the domain layer.
+- **Reliability** - global exception middleware, controller-wide logging filter, in-memory caching and AutoMapper.
 
-## O que está implementado
-
-- **Autenticação e autorização** com Identity, emissão de JWT e refresh tokens.
-- **Rate limiting** em dois níveis: limite global por IP (20 requisições a cada 10 segundos) e política específica de login (5 tentativas por minuto), como mitigação de força bruta.
-- **Versionamento de API** por segmento de URL e query string, com Swagger separado por versão.
-- **Repository + Unit of Work**, com as interfaces declaradas na camada de domínio.
-- **Middleware global de exceções**, para respostas de erro padronizadas.
-- **Filtro de logging** aplicado a todos os controllers.
-- **AutoMapper** para conversão entre entidades e DTOs.
-- **MemoryCache** para reduzir consultas repetidas ao banco.
-- **CORS** configurado para o frontend local.
-
-## Estrutura do projeto
+## Project structure
 
 ```
-FinPulse/              API REST (Program.cs, controllers, configuração)
-FinPulse.Domain/       Entidades, enums, validações, paginação e interfaces de repositório
-FinPulse.Application/  Camada de aplicação
-FinPulse.Infrastructure/ Acesso a dados
-FinPulse.MVC/          Aplicação MVC que consome a API
-FinPulse.Tests/        Testes automatizados
-finpulse-web/          Frontend em React + TypeScript
+FinPulse/                REST API - Program.cs, controllers, configuration
+FinPulse.Domain/         Entities, enums, validation, pagination, repository interfaces
+FinPulse.Application/    Application layer
+FinPulse.Infrastructure/ Data access
+FinPulse.MVC/            MVC client consuming the API
+FinPulse.Tests/          Automated tests
+finpulse-web/            React + TypeScript frontend
 ```
 
-## Como rodar
+## Running locally
 
-Pré-requisitos: .NET 8 SDK e SQL Server LocalDB.
+Requirements: .NET 8 SDK and SQL Server LocalDB.
 
 ```bash
 git clone https://github.com/DiegoSoares22/FinPulse.git
 cd FinPulse/FinPulse
-```
 
-Configure a chave JWT via User Secrets (ela não é versionada):
-
-```bash
 dotnet user-secrets init
-dotnet user-secrets set "JWT:SecretKey" "sua-chave-com-no-minimo-32-caracteres"
-```
+dotnet user-secrets set "JWT:SecretKey" "your-key-with-at-least-32-characters"
 
-Aplique as migrations e suba a API:
-
-```bash
 dotnet ef database update
 dotnet run
 ```
 
-A documentação fica disponível em `https://localhost:<porta>/swagger`.
+Swagger runs at `https://localhost:{port}/swagger`. Secrets are never committed: User Secrets in development, environment variables in production.
 
-## Decisões técnicas
+## Roadmap
 
-- **Segredos fora do repositório:** a chave JWT e as connection strings ficam em User Secrets no desenvolvimento e em variáveis de ambiente em produção.
-- **`ClockSkew = TimeSpan.Zero`:** o padrão do .NET tolera 5 minutos de diferença na expiração do token. Zerar esse valor faz o token expirar no tempo exato configurado.
-- **Rate limit separado para login:** o endpoint de autenticação é o alvo mais comum de força bruta, por isso tem um limite mais restritivo que o global.
-- **Versionamento desde o início:** permite evoluir contratos da API sem quebrar clientes já existentes.
+- [ ] Finish the React + TypeScript frontend
+- [ ] Containerize with Docker
+- [ ] Deploy to production
+- [ ] Expand test coverage
 
-## Próximos passos
+## Sobre o projeto (PT-BR)
 
-- [ ] Concluir o frontend em React + TypeScript
-- [ ] Containerizar com Docker
-- [ ] Publicar em ambiente de produção
-- [ ] Ampliar a cobertura de testes
+API REST de gestao financeira construida em C# com ASP.NET Core 8.
+
+- **Autenticacao** - ASP.NET Core Identity com JWT e refresh tokens, com ClockSkew zerado para o token expirar no tempo exato configurado.
+- **Protecao contra abuso** - rate limiting em dois niveis: limite global por IP e politica mais restritiva no endpoint de login.
+- **Versionamento de API** - por segmento de URL e query string, com Swagger separado por versao.
+- **Acesso a dados** - Repository com Unit of Work e interfaces declaradas na camada de dominio.
+- **Confiabilidade** - middleware global de excecoes, filtro de logging nos controllers, cache em memoria e AutoMapper.
+
+Requisitos para rodar: .NET 8 SDK e SQL Server LocalDB. Os segredos nao sao versionados: User Secrets no desenvolvimento e variaveis de ambiente em producao.
 
 ---
 
-Desenvolvido por [Diego Soares](https://www.linkedin.com/in/diego-soaresdev/)
+**Diego Soares** - https://www.linkedin.com/in/diego-soaresdev/ - https://diegosoares.vercel.app
